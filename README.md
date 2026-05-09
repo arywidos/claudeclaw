@@ -1,4 +1,4 @@
-# ClaudeClaw — Multi-Agent Orchestration Framework for Claude Code
+# ClaudeClaw — Skill, Multi-Agent Orchestration Framework for Claude Code
 
 Alternative multi-agent orchestration for Claude Code. Replaces OpenClaw's PM layer with a reliable, blocking delegation model.
 
