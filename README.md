@@ -16,6 +16,7 @@ Regular Claude Code loses all context when you close a session. Start a new conv
 | **Project state** | You have to re-explain everything | Auto-loaded — status, blockers, decisions, all on disk |
 | **Delegation** | You describe the task yourself each time | Agent personas embedded, tasks delegated with full context |
 | **Resume** | Not possible — start over | "Continue or start new?" — instant resume |
+| **Status updates** | You must manually ask "update the status" | Proactive — auto-writes after every milestone, decision, or blocker |
 
 ### vs. OpenClaw
 
@@ -183,14 +184,27 @@ Full persona prompts in [`agent-personas.md`](agent-personas.md).
 
 ## Project State Persistence
 
-File: `project-tracker.md` — updated after every significant action.
+File: `project-tracker.md` — the backbone of cross-session continuity.
 
 On new session start (project mode):
 1. Claude reads `project-tracker.md` → finds active projects
 2. Asks: *"Active project found. Continue or start new?"*
 3. You decide → continue or start fresh
 
-This solves the "PM idle" problem — state is always on disk, ready for any session.
+### Proactive Auto-Update
+
+ClaudeClaw doesn't wait for you to ask "update the status." In Project Mode, the tracker is **automatically updated** after every qualifying event:
+
+| Trigger | What gets written |
+|---------|-------------------|
+| Agent task completes (success or failure) | Status, phase, last activity |
+| Milestone reached (feature done, bug fixed) | Phase, last activity, next steps |
+| Blocker discovered or resolved | Blockers field updated |
+| Decision made (tech choice, scope change) | Decisions field updated |
+| New project created | Full project entry added |
+| User switches to normal mode | Mode set to `normal` |
+
+This means you can close your session mid-task, come back tomorrow, and Claude will know exactly where things stand — no re-explaining, no lost context.
 
 ---
 
