@@ -1,6 +1,6 @@
 # Project Tracker
 
-_Current mode: normal_
+_Current mode: project_
 
 ## Mode Switching
 
@@ -9,7 +9,28 @@ _Current mode: normal_
 
 ## Projects
 
-_(No active projects yet)_
+### [1] SaaS Image Generator (kie.ai)
+- **Status**: ACTIVE
+- **Started**: 2026-05-08
+- **Last activity**: 2026-05-09 — QA complete, 7 bugs found and all fixed
+- **Phase**: Implementation (M1-M5 done, QA bugs fixed)
+- **Next**: Deployment to VPS
+- **Payment**: Midtrans Starter Pack (QRIS 0.7%, GoPay 2%, VA Rp4K) — registrasi perorangan KTP saja, tanpa PT. Stripe nanti untuk intl cards.
+- **Registration**: Cukup KTP, tanpa NPWP, tanpa PT. Rekening bank pribadi.
+- **Description**: SaaS image editor using kie.ai nano-banana-edit model. One-time purchase credits.
+- **Pricing**: Rp75.000 = 400 credits (100 gens) | Rp150.000 = 1000 credits (250 gens) | 5 free gens for new users
+- **Model**: nano-banana-edit (4 credits/gen, $0.02/gen cost)
+- **Decisions**: One-time purchase (no expiry), 5 free gens, FastAPI + React
+- **Files**: `projects/saas-image-gen/credit-pricing-analysis.md`
+- **QA Bugs Fixed**:
+  1. KieClient crash on null response → proper error handling
+  2. Rate limiting not wired → added to auth + generation routes
+  3. Rate limit ID prefix → fixed "rl_" prefix
+  4. Generation 307 redirect → removed trailing slash
+  5. total_paid_credits → renamed to total_credits_granted
+  6. Security headers → added X-Frame-Options, X-Content-Type-Options, etc.
+  7. No automated tests (noted, not blocking)
+- **Blockers**: None
 
 ---
 

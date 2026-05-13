@@ -1,16 +1,26 @@
 # ClaudeClaw — Project Mode Framework
 
-## Quick Start
+## Startup Prompt
 
-When the user says "project mode" or "mulai project":
+At the start of every new conversation in this directory, immediately ask the user to choose a mode — do NOT proceed until they answer:
 
+> Welcome to **ClaudeClaw**! Choose your mode:
+> 1. **Project Mode** — Orchestrate agents, track state, persist progress across sessions
+> 2. **Normal Mode** — Regular Claude Code, no delegation or state tracking
+>
+> Type **1** or **2**, or say "project mode" / "normal mode".
+
+## Mode Switching
+
+**Entering Project Mode** ("project mode", "mulai project", or user picks option 1):
 1. Read `project-tracker.md` for active projects
 2. Read `agent-personas.md` for persona prompts to embed when spawning agents
 3. Read `two-mode-system.md` for mode switching rules
-4. Ask user: "Ada project aktif. Lanjutkan atau mulai baru?"
+4. Ask user: "Active project found. Continue or start new?"
 
-When the user says "normal mode" or "stop project":
+**Exiting to Normal Mode** ("normal mode", "stop project", or user picks option 2):
 - Switch back to regular Claude behavior, no project tracking
+- No agent delegation, no state updates
 
 ## Two Modes
 

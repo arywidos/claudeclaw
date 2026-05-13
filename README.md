@@ -13,25 +13,100 @@ ClaudeClaw fixes this by making the orchestrator (Claude Code) the active PM tha
 
 ---
 
-## Quick Start
+## Setup
 
-### Enter Project Mode
+### Prerequisites
+
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed (`npm install -g @anthropic-ai/claude-code`)
+- Git
+
+### Install
+
+```bash
+# Clone the framework
+git clone https://github.com/your-org/ClaudeClaw.git
+
+# Windows
+cd C:\Claude\ClaudeClaw
+
+# macOS / Linux
+cd ~/Claude/ClaudeClaw
 ```
-cd D:\AI\ClaudeClaw
+
+That's it. No `npm install`, no dependencies. ClaudeClaw is a prompt-based framework — all you need is Claude Code and the files in this repo.
+
+### How It Auto-Loads
+
+When you open Claude Code in this directory, `CLAUDE.md` is automatically read. It tells Claude to:
+
+1. Ask you to pick a mode (**Project Mode** or **Normal Mode**)
+2. If Project Mode — read `project-tracker.md`, load agent personas, and start orchestrating
+
+You don't need to manually configure anything. Just `cd` into the directory and open Claude Code.
+
+---
+
+## Usage
+
+### Starting a Session
+
+```bash
+# Open Claude Code in the ClaudeClaw directory
+cd C:\Claude\ClaudeClaw    # Windows
+cd ~/Claude/ClaudeClaw     # macOS / Linux
+
+# Launch Claude Code
+claude
 ```
-Then say: **"project mode"**
 
-Or from any directory: **"baca D:\AI\ClaudeClaw\CLAUDE.md lalu project mode"**
+Claude will greet you with a mode picker:
 
-### Exit to Normal Mode
-Say: **"normal mode"** or **"stop project"**
+```
+Welcome to ClaudeClaw! Choose your mode:
+1. Project Mode — Orchestrate agents, track state, persist progress across sessions
+2. Normal Mode — Regular Claude Code, no delegation or state tracking
 
-### New Session Checklist
-1. `cd D:\AI\ClaudeClaw` — Claude Code auto-reads `CLAUDE.md`
-2. Say "project mode"
-3. Claude reads `project-tracker.md` for active projects
-4. Claude asks: "Ada X project aktif. Lanjutkan?"
-5. You decide → continue or start fresh
+Type 1 or 2, or say "project mode" / "normal mode".
+```
+
+### Switching Modes Mid-Session
+
+| Command | Action |
+|---------|--------|
+| **"project mode"** or **"mulai project"** | Enter Project Mode — read tracker, load personas, start orchestrating |
+| **"normal mode"** or **"stop project"** | Exit to Normal Mode — regular Claude, no delegation or tracking |
+
+### Project Mode Flow
+
+After choosing Project Mode, Claude will:
+
+1. Read `project-tracker.md` for active projects
+2. Ask: *"Active project found. Continue or start new?"*
+3. You decide → continue an existing project or create a new one
+4. Claude delegates tasks to specialized agents, **waiting for results** each time
+5. After every action, `project-tracker.md` is updated automatically
+
+### Working on a Project
+
+In Project Mode, Claude acts as orchestrator. You give high-level instructions, Claude breaks them down and delegates:
+
+```
+You: "Build a REST API for user management"
+Claude: (reads Backend Dev persona from agent-personas.md)
+        (spawns Backend Dev agent with task)
+        (waits for result)
+        (verifies result quality)
+        (updates project-tracker.md)
+        (reports back to you)
+```
+
+You can also request specific agents:
+
+```
+You: "Have QA test the auth flow"
+You: "Run a security audit on the payments module"
+You: "Research competing SaaS image generators"
+```
 
 ---
 
@@ -39,22 +114,22 @@ Say: **"normal mode"** or **"stop project"**
 
 | Mode | Trigger | Behavior |
 |------|---------|----------|
-| **Normal** | Default | Regular Claude Code — Q&A, coding, no project tracking |
-| **Project** | "project mode", "mulai project" | Orchestrator mode — delegate to agents, track state, persist progress |
+| **Normal** | Default / "normal mode" | Regular Claude Code — Q&A, coding, no project tracking |
+| **Project** | "project mode" / "mulai project" | Orchestrator mode — delegate to agents, track state, persist progress |
 
 ---
 
-## How It Works
+## Architecture
 
 ```
 ┌──────────────┐
-│  You (Mas Ary) │
+│     You       │
 └──────┬──────┘
        │
 ┌──────▼──────┐
-│  Claude Code │ ← PM + Orchestrator (blocking, not fire-and-forget)
-│  (Project    │
-│   Mode)      │ ← Reads project-tracker.md on session start
+│ Claude Code  │ ← PM + Orchestrator (blocking, not fire-and-forget)
+│ (Project    │
+│  Mode)       │ ← Reads project-tracker.md on session start
 │              │ ← Updates tracker after every action
 │              │ ← Spawns specialized agents via Agent tool
 └──────┬──────┘
@@ -62,9 +137,7 @@ Say: **"normal mode"** or **"stop project"**
   ┌────┼────┬────────┬──────────┬──────────┐
   │    │    │        │          │          │
   ▼    ▼    ▼        ▼          ▼          ▼
-🏗️   🖥️   ⚙️    🧐       🔒       🔭
-Back  Front  Dev    QA      Security  Research
-end    end    Ops    Test    Eng       er
+Backend Frontend DevOps  QA      Security  Researcher
 ```
 
 Key difference from OpenClaw: **Claude Code waits for each agent result before proceeding.** No fire-and-forget.
@@ -77,17 +150,17 @@ Key difference from OpenClaw: **Claude Code waits for each agent result before p
 
 | Persona | Specialty | When to use |
 |---------|-----------|-------------|
-| 🏗️ Backend Dev | API, DB, Python, scraper, data pipeline | Backend tasks, data engineering |
-| 🖥️ Frontend Dev | UI, React/Vue/Streamlit, charts, accessibility | Frontend tasks, dashboard, landing page |
-| ⚙️ DevOps | Docker, CI/CD, deploy, monitoring, infra | Deployment, infra setup, automation |
+| Backend Dev | API, DB, Python, scraper, data pipeline | Backend tasks, data engineering |
+| Frontend Dev | UI, React/Vue/Streamlit, charts, accessibility | Frontend tasks, dashboard, landing page |
+| DevOps | Docker, CI/CD, deploy, monitoring, infra | Deployment, infra setup, automation |
 
 ### Situational (when project needs it)
 
 | Persona | Specialty | When to use |
 |---------|-----------|-------------|
-| 🧐 QA Tester | Testing, bug reports, acceptance criteria | Before deploy, end-to-end verification |
-| 🔒 Security Eng | Threat model, audit, OWASP, penetration testing | Auth/payment/user data features |
-| 🔭 Researcher | Market intel, data gathering, analysis | Before starting project, tech comparison |
+| QA Tester | Testing, bug reports, acceptance criteria | Before deploy, end-to-end verification |
+| Security Eng | Threat model, audit, OWASP, penetration testing | Auth/payment/user data features |
+| Researcher | Market intel, data gathering, analysis | Before starting project, tech comparison |
 
 Full persona prompts in [`agent-personas.md`](agent-personas.md).
 
@@ -98,10 +171,9 @@ Full persona prompts in [`agent-personas.md`](agent-personas.md).
 File: `project-tracker.md` — updated after every significant action.
 
 On new session start (project mode):
-1. Read `MEMORY.md` → see reference to project-tracker
-2. Read `project-tracker.md` → find active projects
-3. Ask user: "Ada X project aktif. Lanjutkan?"
-4. User decides → continue or start fresh
+1. Claude reads `project-tracker.md` → finds active projects
+2. Asks: *"Active project found. Continue or start new?"*
+3. You decide → continue or start fresh
 
 This solves the "PM idle" problem — state is always on disk, ready for any session.
 
@@ -112,12 +184,14 @@ This solves the "PM idle" problem — state is always on disk, ready for any ses
 ```
 NEW SESSION STARTS
   │
-  ├─ Read MEMORY.md (auto-loaded)
+  ├─ CLAUDE.md auto-loaded by Claude Code
   │
-  ├─ Mode = normal?
+  ├─ Claude asks: "Project Mode or Normal Mode?"
+  │
+  ├─ Normal Mode?
   │   └─ Regular Claude Code behavior
   │
-  └─ Mode = project?
+  └─ Project Mode?
       ├─ Read project-tracker.md
       ├─ Find ACTIVE projects
       ├─ Ask user what to work on
@@ -134,28 +208,14 @@ NEW SESSION STARTS
 ## File Structure
 
 ```
-D:\AI\ClaudeClaw\
-  CLAUDE.md                  ← Auto-read by Claude Code (framework overview)
-  README.md                   ← This file (full documentation)
-  project-tracker.md          ← Active project state
-  agent-personas.md            ← 6 persona prompts (core + situational)
-  two-mode-system.md           ← Mode switching rules
-  lessons-learned.md           ← What went wrong with OpenClaw and how we fix it
-```
-
-Auto-loaded by Claude Code (memory system):
-```
-C:\Users\arywidos\.claude\projects\C--Users-arywidos\memory\
-  MEMORY.md                    ← Index (references ClaudeClaw files)
-  project-tracker.md           ← Project state (mirror of workspace)
-  agent-personas-core.md       ← Agent persona prompts (mirror)
-  feedback_two-mode-system.md  ← Mode switching rules
-  openclaw-spawn-yield-fix.md  ← Lesson learned about spawn+yield
-```
-
-Home directory auto-read:
-```
-C:\Users\arywidos\CLAUDE.md   ← Pointer to ClaudeClaw framework
+ClaudeClaw/
+  CLAUDE.md              ← Auto-read by Claude Code (framework config + startup prompt)
+  README.md              ← This file (full documentation)
+  project-tracker.md     ← Active project state
+  agent-personas.md      ← 6 persona prompts (core + situational)
+  two-mode-system.md     ← Mode switching rules
+  lessons-learned.md    ← What went wrong with OpenClaw and how we fix it
+  projects/              ← Per-project working directories
 ```
 
 ---
