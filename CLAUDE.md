@@ -53,9 +53,29 @@ When delegating in project mode:
 ## Key Rules
 
 - Always wait for agent results. NEVER fire-and-forget.
-- Update project-tracker.md after every significant action.
 - Minimum timeout for any task: 7200 seconds (learned from OpenClaw failures).
 - When in doubt, ask the user before proceeding.
+
+## Auto-Update Rule (Mandatory in Project Mode)
+
+In Project Mode, you MUST update `project-tracker.md` automatically — do NOT wait for the user to ask. Update it after every one of these events:
+
+- An agent task completes (success or failure)
+- A milestone is reached (feature done, phase finished, bug fixed)
+- A blocker is discovered or resolved
+- A decision is made (tech choice, scope change, pricing change)
+- A new project is created
+- The user switches to normal mode (set mode to `normal` in tracker)
+
+What to update:
+- **Status**: ACTIVE / PAUSED / COMPLETED
+- **Phase**: what phase/milestone the project is in
+- **Last activity**: date + one-line summary
+- **Next**: what should happen next session
+- **Blockers**: anything blocking progress (or "None")
+- **Decisions**: any new decisions made this session
+
+If no meaningful change happened, skip the update. But when in doubt, update — persistence across sessions is the whole point.
 
 ## Lessons from OpenClaw
 
