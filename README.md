@@ -4,12 +4,27 @@ Alternative multi-agent orchestration for Claude Code. Replaces OpenClaw's PM la
 
 ## Why ClaudeClaw?
 
+### vs. Regular Claude Code
+
+Regular Claude Code loses all context when you close a session. Start a new conversation tomorrow and it's a blank slate — no memory of what you built, what's pending, or what decisions were made.
+
+**ClaudeClaw persists everything to disk.** Close your session, come back next week, and Claude picks up exactly where you left off:
+
+| | Regular Claude Code | ClaudeClaw |
+|--|---------------------|------------|
+| **Context across sessions** | Lost — every session starts from zero | Persisted in `project-tracker.md` |
+| **Project state** | You have to re-explain everything | Auto-loaded — status, blockers, decisions, all on disk |
+| **Delegation** | You describe the task yourself each time | Agent personas embedded, tasks delegated with full context |
+| **Resume** | Not possible — start over | "Continue or start new?" — instant resume |
+
+### vs. OpenClaw
+
 OpenClaw PM had 3 critical failures:
 1. **Fire-and-forget** — 81.5% of delegated tasks never returned results (74/92 backend-dev spawns)
 2. **PM idle** — PM stops working unless manually prodded, projects stall
 3. **Timeout chaos** — Short timeouts (15-300s) killed subagents before they even started
 
-ClaudeClaw fixes this by making the orchestrator (Claude Code) the active PM that **waits for results** before proceeding.
+ClaudeClaw fixes all of these by making the orchestrator (Claude Code) the active PM that **waits for results** before proceeding.
 
 ---
 
