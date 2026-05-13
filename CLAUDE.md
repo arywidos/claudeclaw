@@ -14,9 +14,10 @@ At the start of every new conversation in this directory, immediately ask the us
 
 **Entering Project Mode** ("project mode", "mulai project", or user picks option 1):
 1. Read `project-tracker.md` for active projects
-2. Read `agent-personas.md` for persona prompts to embed when spawning agents
-3. Read `two-mode-system.md` for mode switching rules
-4. Ask user: "Active project found. Continue or start new?"
+2. Read `decision-log.md` for context on past decisions
+3. Read `agent-personas.md` for persona prompts to embed when spawning agents
+4. Read `two-mode-system.md` for mode switching rules
+5. Ask user: "Active project found. Continue or start new?"
 
 **Exiting to Normal Mode** ("normal mode", "stop project", or user picks option 2):
 - Switch back to regular Claude behavior, no project tracking
@@ -63,7 +64,7 @@ In Project Mode, you MUST update `project-tracker.md` automatically — do NOT w
 - An agent task completes (success or failure)
 - A milestone is reached (feature done, phase finished, bug fixed)
 - A blocker is discovered or resolved
-- A decision is made (tech choice, scope change, pricing change)
+- A decision is made (tech choice, scope change, pricing change) → also update `decision-log.md`
 - A new project is created
 - The user switches to normal mode (set mode to `normal` in tracker)
 
@@ -73,7 +74,7 @@ What to update:
 - **Last activity**: date + one-line summary
 - **Next**: what should happen next session
 - **Blockers**: anything blocking progress (or "None")
-- **Decisions**: any new decisions made this session
+- **Decisions**: any new decisions made this session → also log to `decision-log.md`
 
 If no meaningful change happened, skip the update. But when in doubt, update — persistence across sessions is the whole point.
 
@@ -86,3 +87,18 @@ OpenClaw PM had 81.5% delegation failure rate because:
 - No state persistence across sessions
 
 ClaudeClaw fixes all of these. See `lessons-learned.md` for full analysis.
+
+## Decision Log
+
+File: `decision-log.md` — records **why** decisions were made, not just what was done.
+
+When a decision is made in Project Mode (tech stack, pricing, scope change, architecture choice), log it with:
+- **Decision ID**: D-XXX (auto-increment)
+- **Date**: when the decision was made
+- **Context**: what prompted the decision
+- **Options considered**: list alternatives that were evaluated
+- **Chosen**: which option was selected
+- **Why**: the reasoning behind the choice
+- **Impact**: consequences or trade-offs of this decision
+
+This prevents re-litigating decisions when resuming a project days or weeks later.

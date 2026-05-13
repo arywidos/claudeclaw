@@ -14,6 +14,7 @@ Regular Claude Code loses all context when you close a session. Start a new conv
 |--|---------------------|------------|
 | **Context across sessions** | Lost — every session starts from zero | Persisted in `project-tracker.md` |
 | **Project state** | You have to re-explain everything | Auto-loaded — status, blockers, decisions, all on disk |
+| **Decision history** | "Why did we choose X?" — forgotten | Every decision logged with reasoning in `decision-log.md` |
 | **Delegation** | You describe the task yourself each time | Agent personas embedded, tasks delegated with full context |
 | **Resume** | Not possible — start over | "Continue or start new?" — instant resume |
 | **Status updates** | You must manually ask "update the status" | Proactive — auto-writes after every milestone, decision, or blocker |
@@ -200,11 +201,47 @@ ClaudeClaw doesn't wait for you to ask "update the status." In Project Mode, the
 | Agent task completes (success or failure) | Status, phase, last activity |
 | Milestone reached (feature done, bug fixed) | Phase, last activity, next steps |
 | Blocker discovered or resolved | Blockers field updated |
-| Decision made (tech choice, scope change) | Decisions field updated |
+| Decision made (tech choice, scope change) | Decisions field + `decision-log.md` entry |
 | New project created | Full project entry added |
 | User switches to normal mode | Mode set to `normal` |
 
 This means you can close your session mid-task, come back tomorrow, and Claude will know exactly where things stand — no re-explaining, no lost context.
+
+---
+
+## Decision Log
+
+File: `decision-log.md` — records **why** decisions were made, not just what was done.
+
+When you resume a project after days or weeks, you don't just need to know *what* happened — you need to know *why*. Without a decision log, you risk re-litigating choices that were already made, or reversing decisions without understanding the original reasoning.
+
+Each decision entry includes:
+
+| Field | Purpose |
+|-------|---------|
+| **Decision ID** | Auto-incrementing (D-001, D-002, ...) for easy reference |
+| **Date** | When the decision was made |
+| **Context** | What prompted the decision |
+| **Options considered** | Alternatives that were evaluated |
+| **Chosen** | Which option was selected |
+| **Why** | The reasoning behind the choice |
+| **Impact** | Consequences or trade-offs |
+
+**Example:**
+```
+### D-001: One-time purchase credits (no expiry)
+- **Date**: 2026-05-08
+- **Context**: Choosing monetization model
+- **Options considered**:
+  1. Monthly subscription with monthly credits
+  2. One-time purchase credits with expiry
+  3. One-time purchase credits, no expiry
+- **Chosen**: Option 3
+- **Why**: Lower friction for Indonesian market. Users distrust subscriptions.
+- **Impact**: No recurring revenue, but higher initial conversion.
+```
+
+Decision log entries are created automatically in Project Mode whenever a significant choice is made — tech stack, pricing, scope change, architecture, etc.
 
 ---
 
@@ -222,6 +259,7 @@ NEW SESSION STARTS
   │
   └─ Project Mode?
       ├─ Read project-tracker.md
+      ├─ Read decision-log.md
       ├─ Find ACTIVE projects
       ├─ Ask user what to work on
       ├─ Read persona from agent-personas.md
@@ -241,10 +279,10 @@ ClaudeClaw/
   CLAUDE.md              ← Auto-read by Claude Code (framework config + startup prompt)
   README.md              ← This file (full documentation)
   project-tracker.md     ← Active project state
+  decision-log.md        ← Why decisions were made (not just what)
   agent-personas.md      ← 6 persona prompts (core + situational)
   two-mode-system.md     ← Mode switching rules
   lessons-learned.md    ← What went wrong with OpenClaw and how we fix it
-  projects/              ← Per-project working directories
 ```
 
 ---
