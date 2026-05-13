@@ -209,6 +209,43 @@ Resume a project months later, and you don't just know *what* happened — you k
 
 ---
 
+## What About Cost? OpenClaw Is Free, Claude Code Is Expensive
+
+Here's the obvious objection: OpenClaw is open-source and free. Claude Code is not.
+
+That's true. But "free" and "cheap" are different things.
+
+### The Real Cost of "Free"
+
+OpenClaw is free to install. But 81.5% delegation failure means:
+- Every task that fails is time wasted — your time, waiting for results that never come
+- Re-spawning agents costs API tokens on tasks that were already running
+- 12 persistent agents running 24/7, even when idle, burning through your API quota
+- The PM's cron watchdog, re-spawns, and session overhead all consume tokens on unproductive work
+
+You're not paying for OpenClaw itself. You're paying for the API calls that go nowhere. The hidden cost of unreliability.
+
+### The Affordable Path: ClaudeClaw + Cost-Effective Models
+
+ClaudeClaw is a framework, not a product. It works with Claude Code, but Claude Code supports multiple model providers — including affordable ones.
+
+The most cost-effective approach I've found: **using the ClaudeClaw framework with open-source cloud models like GLM-5.1:Cloud at $20/month**, which resets weekly. That's enough to handle multiple projects per week with near-100% delegation success.
+
+Compare the real cost:
+
+| Cost Factor | OpenClaw (Free) | ClaudeClaw + GLM-5.1:Cloud |
+|---|---|---|
+| Platform cost | $0 | $20/month |
+| API tokens wasted on failed delegations | High (81.5% fail rate) | Near zero (~100% success) |
+| API tokens on idle agents | 12 agents × 24/7 | 1 orchestrator + on-demand |
+| Re-spawn cost | High (47-200s intervals) | $0 (blocking, no re-spawns) |
+| Time cost of debugging failed delegations | Significant | Minimal |
+| Infrastructure | Node.js + Discord + cron | None |
+
+**$20/month with near-100% success is cheaper than $0/month with 81.5% failure.** You're not paying for the framework — you're paying for reliability. And when your time has value, reliability is the cheapest option.
+
+---
+
 ## Key Takeaways
 
 1. **Asynchronous without reliable delivery is an anti-pattern.** If the orchestrator can't reliably receive results, the entire orchestration layer only adds noise without adding reliability.
@@ -224,6 +261,8 @@ Resume a project months later, and you don't just know *what* happened — you k
 6. **Continuity doesn't require always-alive sessions.** File-based memory and project trackers provide cross-session continuity without the cost and complexity of persistent agents.
 
 7. **Record why, not just what.** Project trackers tell you the status. Decision logs tell you the reasoning. Two weeks from now, "we chose Midtrans" is a fact. "We chose Midtrans because QRIS and GoPay are essential for the Indonesian market and it only needs KTP" is knowledge. Both are needed for true project continuity.
+
+8. **"Free" is not the same as "cheap."** An $0/month platform with 81.5% failure rate costs more in wasted time, API tokens, and debugging than a $20/month framework with near-100% success. When your time has value, reliability is the cheapest option.
 
 ---
 
