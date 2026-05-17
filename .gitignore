@@ -20,3 +20,9 @@ node_modules/
 
 # Logs
 *.log
+
+# Archive — local project data, not part of framework
+archive/
+
+# Research — project-specific data, not framework
+research/
